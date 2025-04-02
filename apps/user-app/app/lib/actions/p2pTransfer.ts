@@ -35,8 +35,6 @@ export async function p2pTransfer(to: string, amount: number) {
         where: { userId: Number(fromUser) },
       });
 
-      console.log(fromBalance);
-
       if (!fromBalance || fromBalance.amount < amount) {
         throw new Error("Insufficient funds");
       }
@@ -54,7 +52,14 @@ export async function p2pTransfer(to: string, amount: number) {
         data: { amount: { increment: amount } },
       });
 
-      console.log(toUser.id);
+      await txn.p2PTransfer.create({
+        data: {
+          fromUserId: Number(fromUser),
+          toUserId: toUser.id,
+          amount,
+          timeStamp: new Date(),
+        },
+      });
     });
   } catch (error) {
     console.log("Bhakkkkknjcwehkjcwehkckdnsckkm dsnak ");
